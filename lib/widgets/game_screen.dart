@@ -23,7 +23,7 @@ class GameScreen extends StatelessWidget {
   Widget buildPage(BuildContext context) {
     var session = Provider.of<QuizSession>(context, listen: false);
     if (session.gameOver) {
-      // TODO call buildGameOver page
+      return buildGameOver(context, session.score);
     }
     return buildQuestion(context, session.currentQuestion);
   }
@@ -34,6 +34,7 @@ class GameScreen extends StatelessWidget {
           onPressed: () {
             var session = Provider.of<QuizSession>(context, listen: false);
             if (session.checkAnswer(answer)) {
+              session.updateScore();
               session.nextQuestion();
             }
           },
@@ -49,6 +50,31 @@ class GameScreen extends StatelessWidget {
         children: <Widget>[
           Text(question.caption, textScaleFactor: 2.0),
           ...answerButtons,
+        ],
+      ),
+    );
+  }
+
+  Widget buildGameOver(BuildContext context, int score) {
+    var session = Provider.of<QuizSession>(context, listen: false);
+    String scoreText =
+        session.score.toString() + " / " + session.questionsCount.toString();
+
+    ElevatedButton returnButton = ElevatedButton(
+        onPressed: () {
+          session.resetScore();
+        },
+        child: SizedBox(
+            width: double.infinity,
+            child: Text("New Game",
+                textScaleFactor: 2.0, textAlign: TextAlign.center)));
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(scoreText, textScaleFactor: 2.0),
+          returnButton,
         ],
       ),
     );

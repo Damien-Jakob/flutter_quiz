@@ -17,10 +17,13 @@ class QuizSession with ChangeNotifier {
 
   Question get currentQuestion => _questions[_currentQuestionIndex];
 
-  bool get gameOver => _score >= 10;
+  int get questionsCount => _questions.length;
+
+  bool get gameOver => _score >= questionsCount;
 
   void resetScore() {
     _score = 0;
+    notifyListeners();
   }
 
   void updateScore() {
