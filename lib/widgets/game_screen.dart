@@ -14,26 +14,30 @@ class GameScreen extends StatelessWidget {
       body: ChangeNotifierProvider(
         create: (_) => QuizSession(),
         child: Consumer<QuizSession>(
-          builder: (consumerContext, session, __) => buildQuestion(consumerContext, session.currentQuestion),
+          builder: (consumerContext, session, __) => buildPage(consumerContext),
         ),
       ),
     );
   }
 
+  Widget buildPage(BuildContext context) {
+    var session = Provider.of<QuizSession>(context, listen: false);
+    return buildQuestion(context, session.currentQuestion);
+  }
+
   Widget buildQuestion(BuildContext context, Question question) {
     var answerButtons = question.answers.map((answer) {
       return ElevatedButton(
-        onPressed: () {
-          var session = Provider.of<QuizSession>(context, listen: false);
-          if (session.checkAnswer(answer)) {
-            session.nextQuestion();
-          }
-        },
-        child: SizedBox(
-          width: double.infinity,
-          child: Text(answer, textScaleFactor: 2.0, textAlign: TextAlign.center)
-        )
-      );
+          onPressed: () {
+            var session = Provider.of<QuizSession>(context, listen: false);
+            if (session.checkAnswer(answer)) {
+              session.nextQuestion();
+            }
+          },
+          child: SizedBox(
+              width: double.infinity,
+              child: Text(answer,
+                  textScaleFactor: 2.0, textAlign: TextAlign.center)));
     });
 
     return Center(
