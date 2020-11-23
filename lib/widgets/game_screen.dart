@@ -22,6 +22,9 @@ class GameScreen extends StatelessWidget {
 
   Widget buildPage(BuildContext context) {
     var session = Provider.of<QuizSession>(context, listen: false);
+    if (session.gameOver) {
+      // TODO call buildGameOver page
+    }
     return buildQuestion(context, session.currentQuestion);
   }
 
