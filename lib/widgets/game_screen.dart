@@ -22,14 +22,17 @@ class GameScreen extends StatelessWidget {
 
   Widget buildQuestion(BuildContext context, Question question) {
     var answerButtons = question.answers.map((answer) {
-      return RaisedButton(
+      return ElevatedButton(
         onPressed: () {
           var session = Provider.of<QuizSession>(context, listen: false);
           if (session.checkAnswer(answer)) {
             session.nextQuestion();
           }
         },
-        child: Text(answer),
+        child: SizedBox(
+          width: double.infinity,
+          child: Text(answer, textScaleFactor: 2.0, textAlign: TextAlign.center)
+        )
       );
     });
 
@@ -37,7 +40,7 @@ class GameScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(question.caption),
+          Text(question.caption, textScaleFactor: 2.0),
           ...answerButtons,
         ],
       ),
