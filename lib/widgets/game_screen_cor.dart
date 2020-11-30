@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:quiz/models/quiz_session.dart';
-import 'package:quiz/models/question.dart';
+import 'package:quiz/models/quiz_session_cor.dart';
 
 class GameScreen extends StatelessWidget {
   @override
@@ -15,7 +14,9 @@ class GameScreen extends StatelessWidget {
         create: (_) => QuizSession(),
         child: Consumer<QuizSession>(
           builder: (consumerContext, session, __) {
-            return session.currentQuestion == null ? buildGameEnded(consumerContext, session) : buildQuestion(consumerContext, session);
+            return session.currentQuestion == null
+                ? buildGameEnded(consumerContext, session)
+                : buildQuestion(consumerContext, session);
           },
         ),
       ),
@@ -26,15 +27,14 @@ class GameScreen extends StatelessWidget {
     var question = session.currentQuestion;
     var answerButtons = question.answers.map((answer) {
       return ElevatedButton(
-        onPressed: () {
-          session.checkAnswer(answer);
-          session.nextQuestion();
-        },
-        child: SizedBox(
-          width: double.infinity,
-          child: Text(answer, textScaleFactor: 2.0, textAlign: TextAlign.center)
-        )
-      );
+          onPressed: () {
+            session.checkAnswer(answer);
+            session.nextQuestion();
+          },
+          child: SizedBox(
+              width: double.infinity,
+              child: Text(answer,
+                  textScaleFactor: 2.0, textAlign: TextAlign.center)));
     });
 
     return Center(
@@ -52,8 +52,7 @@ class GameScreen extends StatelessWidget {
   Widget buildHint(BuildContext context, QuizSession session) {
     if (session.hintRequested) {
       return Text(session.currentQuestion.hint, textScaleFactor: 2.0);
-    }
-    else {
+    } else {
       return ElevatedButton(
         onPressed: () {
           session.requestHint();
@@ -69,13 +68,15 @@ class GameScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text("GAME OVER", textScaleFactor: 2.0),
-          Text("${session.score} / ${session.questionsCount}", textScaleFactor: 2.0),
+          Text("${session.score} / ${session.questionsCount}",
+              textScaleFactor: 2.0),
           ElevatedButton(
             onPressed: () {
               // This is currently a cheating hack because we know we are the home screen!
               Navigator.pushReplacementNamed(context, "/");
             },
-            child: Text("Restart", textScaleFactor: 2.0, textAlign: TextAlign.center),
+            child: Text("Restart",
+                textScaleFactor: 2.0, textAlign: TextAlign.center),
           ),
         ],
       ),
