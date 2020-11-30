@@ -19,11 +19,6 @@ class QuizSession with ChangeNotifier {
   int get questionsCount => _questions.length;
   bool get gameOver => _score >= questionsCount;
 
-  void resetScore() {
-    _score = 0;
-    notifyListeners();
-  }
-
   void _updateScore() {
     _score++;
     notifyListeners();
