@@ -3,8 +3,15 @@ import 'package:provider/provider.dart';
 
 import 'package:quiz/models/quiz_session.dart';
 import 'package:quiz/models/question.dart';
+import 'package:quiz/widgets/game_over.dart';
 
 class GameScreen extends StatelessWidget {
+  bool _showHint = false;
+
+  void changeHintVisibility() {
+    _showHint = !_showHint;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +30,7 @@ class GameScreen extends StatelessWidget {
   Widget buildPage(BuildContext context) {
     var session = Provider.of<QuizSession>(context, listen: false);
     if (session.gameOver) {
-      return buildGameOver(context, session.score);
+      return GameOver();
     }
     return buildQuestion(context, session.currentQuestion);
   }
@@ -40,41 +47,39 @@ class GameScreen extends StatelessWidget {
           },
           child: SizedBox(
               width: double.infinity,
-              child: Text(answer,
-                  textScaleFactor: 2.0, textAlign: TextAlign.center)));
+              child: Text(
+                answer,
+                textScaleFactor: 2.0,
+                textAlign: TextAlign.center,
+              )));
     });
 
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(question.caption, textScaleFactor: 2.0),
+          Text(
+            question.caption,
+            textScaleFactor: 2.0,
+          ),
+          ElevatedButton(
+            onPressed: () => {changeHintVisibility()},
+            child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  "?",
+                  textScaleFactor: 2.0,
+                  textAlign: TextAlign.center,
+                )),
+          ),
+          Visibility(
+            visible: _showHint,
+            child: Text(
+              question.hint,
+              textScaleFactor: 2.0,
+            ),
+          ),
           ...answerButtons,
-        ],
-      ),
-    );
-  }
-
-  Widget buildGameOver(BuildContext context, int score) {
-    var session = Provider.of<QuizSession>(context, listen: false);
-    String scoreText =
-        session.score.toString() + " / " + session.questionsCount.toString();
-
-    ElevatedButton returnButton = ElevatedButton(
-        onPressed: () {
-          session.resetScore();
-        },
-        child: SizedBox(
-            width: double.infinity,
-            child: Text("New Game",
-                textScaleFactor: 2.0, textAlign: TextAlign.center)));
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(scoreText, textScaleFactor: 2.0),
-          returnButton,
         ],
       ),
     );
