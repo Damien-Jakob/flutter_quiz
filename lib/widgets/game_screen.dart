@@ -40,10 +40,7 @@ class GameScreen extends StatelessWidget {
       return ElevatedButton(
           onPressed: () {
             var session = Provider.of<QuizSession>(context, listen: false);
-            if (session.checkAnswer(answer)) {
-              session.updateScore();
-              session.nextQuestion();
-            }
+            session.submitAnswer(answer);
           },
           child: SizedBox(
               width: double.infinity,

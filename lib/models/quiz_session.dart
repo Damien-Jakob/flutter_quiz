@@ -24,14 +24,12 @@ class QuizSession with ChangeNotifier {
     notifyListeners();
   }
 
-  // TODO private
-  void updateScore() {
+  void _updateScore() {
     _score++;
     notifyListeners();
   }
 
-// TODO private
-  void nextQuestion() {
+  void _nextQuestion() {
     _currentQuestionIndex = (_currentQuestionIndex + 1) % _questions.length;
     notifyListeners();
   }
@@ -39,8 +37,8 @@ class QuizSession with ChangeNotifier {
   bool submitAnswer(String answer) {
     bool isCorrect = checkAnswer(answer);
     if (isCorrect) {
-      updateScore();
-      nextQuestion();
+      _updateScore();
+      _nextQuestion();
     }
     return isCorrect;
   }
