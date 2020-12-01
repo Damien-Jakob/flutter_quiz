@@ -8,22 +8,28 @@ class GameOver extends StatelessWidget {
     var session = Provider.of<QuizSession>(context, listen: false);
     String scoreText = "${session.score} / ${session.questionsCount}";
 
-    ElevatedButton returnButton = ElevatedButton(
+    ElevatedButton newGameButton = ElevatedButton(
         onPressed: () {
           // Cheating way to reset the QuizSession
           Navigator.pushReplacementNamed(context, "/");
         },
         child: SizedBox(
             width: double.infinity,
-            child: Text("New Game",
-                textScaleFactor: 2.0, textAlign: TextAlign.center)));
+            child: Text(
+              "New Game",
+              textScaleFactor: 2.0,
+              textAlign: TextAlign.center,
+            )));
 
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(scoreText, textScaleFactor: 2.0),
-          returnButton,
+          Text(
+            scoreText,
+            textScaleFactor: 2.0,
+          ),
+          newGameButton,
         ],
       ),
     );
