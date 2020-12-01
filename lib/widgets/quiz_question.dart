@@ -54,13 +54,11 @@ class _QuizQuestionState extends State<QuizQuestion> {
           ),
           ElevatedButton(
             onPressed: () => {changeHintVisibility()},
-            child: SizedBox(
-                width: double.infinity,
-                child: Text(
-                  "?",
-                  textScaleFactor: 2.0,
-                  textAlign: TextAlign.center,
-                )),
+            child: Text(
+              "?",
+              textScaleFactor: 2.0,
+              textAlign: TextAlign.center,
+            ),
           ),
           Visibility(
             visible: _showHint,
