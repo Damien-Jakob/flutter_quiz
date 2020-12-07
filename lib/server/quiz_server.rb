@@ -57,6 +57,8 @@ set :bind, '0.0.0.0'
 
 get '/questions/next' do
   content_type  :json
+  # Test long loading
+  sleep(2)
   Question.all.sample.to_json
 end
 
