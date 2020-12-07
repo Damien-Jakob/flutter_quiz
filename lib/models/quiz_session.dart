@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -6,20 +7,26 @@ import 'package:http/http.dart' as http;
 
 class QuizSession with ChangeNotifier {
   Question _currentQuestion;
-  int _difficulty = 0;
+  int _difficulty = 3;
   int _questionsCount = 0;
   int _length = 10;
   int _score = 0;
 
+  Timer _sessionTimer;
+
   Question get currentQuestion => _currentQuestion;
   int get length => _length;
   int get score => _score;
-  bool get gameOver => _questionsCount >= _length;
+  bool get gameOver {
+    return _questionsCount >= _length ||
+        (!_sessionTimer.isActive && _difficulty >= 2);
+  }
 
   QuizSession() {
     if (_difficulty >= 2) {
       _length = 15;
     }
+    _sessionTimer = new Timer(Duration(seconds: 30), () => {notifyListeners()});
     _nextQuestion();
   }
 
