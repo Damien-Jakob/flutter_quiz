@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 #
 # Run me to launch the REST server but before install `sinatra` once with `gem install sinatra`
+#
+# ruby .\quiz_server.rb
 
 require 'sinatra'
 require 'json'
