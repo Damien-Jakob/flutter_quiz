@@ -53,6 +53,8 @@ end
 # Server end-points
 #
 
+set :bind, '0.0.0.0'
+
 get '/questions/next' do
   content_type  :json
   Question.all.sample.to_json

@@ -6,7 +6,7 @@ class GameOver extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var session = Provider.of<QuizSession>(context, listen: false);
-    String scoreText = "${session.score} / ${session.questionsCount}";
+    String scoreText = "${session.score} / ${session.length}";
 
     ElevatedButton newGameButton = ElevatedButton(
         onPressed: () {

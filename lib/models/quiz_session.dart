@@ -1,23 +1,37 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:quiz/models/question.dart';
+import 'package:http/http.dart' as http;
 
 class QuizSession with ChangeNotifier {
-  var _questions = [
-    Question("2 + 2", ["1", "2", "4"], "4", "come on"),
-    Question("Meaning of life?", ["God", "42", "Me"], "42", "H2G2"),
-    Question("May the Force be with you",
-        ["Star Wars", "Forest Gump", "American Pie"], "Star Wars", "Skywalker"),
-  ];
-
+  Question _currentQuestion;
+  int _answersCount = 0;
+  int _length = 3;
   int _score = 0;
-  var _currentQuestionIndex = 0;
 
+  Question get currentQuestion => _currentQuestion;
+  int get length => _length;
   int get score => _score;
-  Question get currentQuestion => _currentQuestionIndex >= questionsCount
-      ? null
-      : _questions[_currentQuestionIndex];
-  int get questionsCount => _questions.length;
-  bool get gameOver => _score >= questionsCount;
+  bool get gameOver => _answersCount >= 3;
+
+  QuizSession() {
+    _nextQuestion();
+  }
+
+  bool submitAnswer(int answerIndex) {
+    bool isCorrect = checkAnswer(answerIndex);
+    if (isCorrect) {
+      _answersCount++;
+      _updateScore();
+      _nextQuestion();
+    }
+    return isCorrect;
+  }
+
+  bool checkAnswer(int answerIndex) {
+    return _currentQuestion.isCorrectAnswerIndex(answerIndex);
+  }
 
   void _updateScore() {
     _score++;
@@ -25,20 +39,19 @@ class QuizSession with ChangeNotifier {
   }
 
   void _nextQuestion() {
-    _currentQuestionIndex = (_currentQuestionIndex + 1) % _questions.length;
+    _currentQuestion = null;
     notifyListeners();
+    _fetchNextQuestion();
   }
 
-  bool submitAnswer(String answer) {
-    bool isCorrect = checkAnswer(answer);
-    if (isCorrect) {
-      _updateScore();
-      _nextQuestion();
+  void _fetchNextQuestion() async {
+    final response = await http.get('http://192.168.1.112:4567/questions/next');
+
+    if (response.statusCode == 200) {
+      _currentQuestion = Question.fromJson(jsonDecode(response.body));
+      notifyListeners();
+    } else {
+      throw Exception('Failed to load next question');
     }
-    return isCorrect;
-  }
-
-  bool checkAnswer(String answer) {
-    return _questions[_currentQuestionIndex].isCorrectAnswer(answer);
   }
 }

@@ -28,21 +28,29 @@ class _QuizQuestionState extends State<QuizQuestion> {
     var session = Provider.of<QuizSession>(context);
     Question question = session.currentQuestion;
 
-    var answerButtons = question.answers.map((answer) {
-      return ElevatedButton(
-          onPressed: () {
-            if (session.submitAnswer(answer)) {
-              hideHint();
-            }
-          },
-          child: SizedBox(
-              width: double.infinity,
-              child: Text(
-                answer,
-                textScaleFactor: 2.0,
-                textAlign: TextAlign.center,
-              )));
-    });
+    if (question == null) {
+      return CircularProgressIndicator();
+    }
+
+    var answerButtons = question.answers
+        .asMap()
+        .map((answerIndex, answer) => MapEntry(
+            answerIndex,
+            ElevatedButton(
+                onPressed: () {
+                  if (session.submitAnswer(answerIndex)) {
+                    hideHint();
+                  }
+                },
+                child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      answer,
+                      textScaleFactor: 2.0,
+                      textAlign: TextAlign.center,
+                    )))))
+        .values
+        .toList();
 
     return Center(
       child: Column(
