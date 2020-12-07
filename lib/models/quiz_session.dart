@@ -6,25 +6,37 @@ import 'package:http/http.dart' as http;
 
 class QuizSession with ChangeNotifier {
   Question _currentQuestion;
-  int _answersCount = 0;
-  int _length = 3;
+  int _difficulty = 0;
+  int _questionsCount = 0;
+  int _length = 10;
   int _score = 0;
 
   Question get currentQuestion => _currentQuestion;
   int get length => _length;
   int get score => _score;
-  bool get gameOver => _answersCount >= 3;
+  bool get gameOver => _questionsCount >= _length;
 
   QuizSession() {
+    if (_difficulty >= 2) {
+      _length = 15;
+    }
     _nextQuestion();
   }
 
   bool submitAnswer(int answerIndex) {
     bool isCorrect = checkAnswer(answerIndex);
     if (isCorrect) {
-      _answersCount++;
-      _updateScore();
-      _nextQuestion();
+      _score++;
+    } else if (_difficulty >= 1) {
+      _score--;
+    }
+    if (isCorrect || _difficulty <= 0) {
+      _questionsCount++;
+      if (!gameOver) {
+        _nextQuestion();
+      } else {
+        notifyListeners();
+      }
     }
     return isCorrect;
   }
