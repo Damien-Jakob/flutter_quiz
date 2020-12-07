@@ -3,11 +3,20 @@ class Question {
   List<String> answers;
   String hint;
 
-  String _correctAnswer;
+  int correctAnswerIndex;
 
-  Question(this.caption, this.answers, this._correctAnswer, [this.hint = ""]);
+  Question({this.caption, this.answers, this.correctAnswerIndex, this.hint});
 
-  bool isCorrectAnswer(String answer) {
-    return _correctAnswer == answer;
+  factory Question.fromJson(Map<String, dynamic> json) {
+    return Question(
+      caption: json['caption'],
+      answers: json['answers'].cast<String>(),
+      correctAnswerIndex: json['correct_answer_index'],
+      hint: json['hint'],
+    );
+  }
+
+  bool isCorrectAnswerIndex(int answerIndex) {
+    return correctAnswerIndex == answerIndex;
   }
 }
